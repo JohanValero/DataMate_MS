@@ -23,6 +23,15 @@ def get_user_by_plataform(iPlataform, iEmail):
         }
     return vResult
 
+def verify_email_user_id(iUserPK : int, iUserEmail : str):
+    vDBConnection = get_db_connection()
+    vCursor = vDBConnection.cursor()
+    vCursor.execute("SELECT 1 FROM TB_USER WHERE PK_USER = ? AND EMAIL = ?", [iUserPK, iUserEmail])
+    vResult = vCursor.fetchone()
+    vCursor.close()
+    vDBConnection.close()
+    return len(vResult) > 0
+
 def save_user(iName : str, iEmail : str, iImageUrl : str, iPlataform : str):
     vDBConnection = get_db_connection()
     vCursor = vDBConnection.cursor()
