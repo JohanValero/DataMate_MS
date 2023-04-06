@@ -8,7 +8,7 @@ from google.auth.transport import requests as google_requests
 
 import dbMgr
 
-cGOOGLE_CLIENT_ID = "988130516547-4diasclnbfg99npthc2ahoogap0eqkce.apps.googleusercontent.com"
+cGOOGLE_CLIENT_ID = os.getenv("GOOGLE_CLIENT_ID")
 
 gApp : Flask = Flask(__name__)
 CORS(gApp, resources={r"/*": {"origins": "http://localhost:3000"}})
@@ -47,7 +47,8 @@ def google_login():
         # Login or Logup of the user.
         vResponse : Response = general_login(vIdInfo["name"], vIdInfo["email"], vIdInfo["picture"], "GOOGLE")
     except Exception as ex:
-        vResponse : Response = error_response("-1", ex)
+        print("Error during login: ", ex)
+        vResponse : Response = error_response("-1", "Login failed", str(ex))
     return vResponse
 
 @gApp.route("/api/google/get_schemas", methods = ['GET', 'POST'])
