@@ -1,5 +1,6 @@
 import os
 import openai
+import random
 
 from flask import Flask, request, Response, jsonify
 from flask_cors import CORS
@@ -79,6 +80,48 @@ def get_schemas():
 
         # Login or Logup the user.
         vResponse : dict = {'status': 'OK', 'schemas': vSchemas}
+        vResponse : Response = jsonify(vResponse)
+        vResponse.headers.add('Access-Control-Allow-Origin', '*')
+    except Exception as ex:
+        return error_response("-1", "Uncontrolled error", str(ex))
+    return vResponse
+
+
+@gApp.route("/api/google/chat", methods = ['GET', 'POST'])
+def get_chat():
+    # Verify the Google token.
+    #vToken = request.json['id_token']
+    #vUserPk = int(request.json['user_id'])
+    vQuestion = request.json["nlp_question"]
+    
+    #try:
+    #    vIdInfo = id_token.verify_oauth2_token(vToken, google_requests.Request(), cGOOGLE_CLIENT_ID)
+    #except Exception as ex:
+    #    return error_response(1, "Authentication failed", str(ex))
+
+    try:
+        # Verify that the user is registrered in the database.
+        #if not dbMgr.verify_email_user_id(vUserPk, vIdInfo['email']):
+        #    return error_response(1, "User not correctly registrered.")
+        
+        vDefaultAnswers = [
+            "SELECT column1, column2, column3 FROM my_table",
+            "SELECT DISTINCT column1 FROM my_table",
+            "SELECT * FROM my_table WHERE column1 = 'value'",
+            "SELECT t1.column1, t2.column2 FROM table1 t1 JOIN table2 t2 ON t1.column3 = t2.column4"
+        ]
+
+        # Here want in the Data base or Cloud Storage the schemas saved by the user.
+        vChatRespond = [{
+            "text": vQuestion,
+            "isUser": True
+        }, {
+            "text": random.choice(vDefaultAnswers),
+            "isUser": False
+        }]
+
+        # Login or Logup the user.
+        vResponse : dict = {'status': 'OK', 'chat_data': vChatRespond}
         vResponse : Response = jsonify(vResponse)
         vResponse.headers.add('Access-Control-Allow-Origin', '*')
     except Exception as ex:
