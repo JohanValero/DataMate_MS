@@ -12,7 +12,7 @@ import dbMgr
 cGOOGLE_CLIENT_ID = os.getenv("GOOGLE_CLIENT_ID")
 
 gApp : Flask = Flask(__name__)
-CORS(gApp, resources={r"/*": {"origins": "http://localhost:3000"}})
+CORS(gApp, resources={r"/*": {"origins": "*"}})
 
 @gApp.route('/hello')
 def hello():
